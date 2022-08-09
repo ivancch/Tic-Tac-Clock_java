@@ -1,16 +1,16 @@
-package com.ivanch.TicTacClock.TicTacClockMutex;
+package com.ivanch.TicTacClock.TicTacClockMutexVer1;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class ThreadClock implements Runnable{
+public class ThreadTacV1 implements Runnable {
 
 	private final Object[] monitors;
 	private final Thread self;
 	private final int iterations;
 	private final FileOutputStream outputStream;
 	
-	public ThreadClock(Object[] monitors, int numberOfIterations, FileOutputStream outputStream) {
+	public ThreadTacV1(Object[] monitors, int numberOfIterations, FileOutputStream outputStream) {
 		this.monitors = monitors;
 		self = new Thread (this);
 		iterations = numberOfIterations;
@@ -38,34 +38,37 @@ public class ThreadClock implements Runnable{
 		int i = 0;
 		while (true) {
 
-			echoClock();
+			echoTac();
 			
-			synchronized (monitors[2]) {
-				monitors[2].notify();					
-			}				
+			synchronized (monitors[1]) {
+				monitors[1].notify();					
+			}			
 			
 			if (i == iterations - 1)
 				break; //loop exit condition
 			i++;
 			
 			try {
-				synchronized (monitors[1]) {
-					monitors[1].wait();
+				synchronized (monitors[0]) {
+					monitors[0].wait();
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-
+			
 		}
 	}
 	
-	private void echoClock() {
+	private void echoTac() {
 		try {
-			outputStream.write("clock!\n".getBytes());
+			outputStream.write("tac - ".getBytes());
 		} catch (IOException e) { e.printStackTrace(); }
 	}
-	
+
 }
+
+
+
 
 
 

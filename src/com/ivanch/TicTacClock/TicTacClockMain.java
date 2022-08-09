@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import com.ivanch.TicTacClock.TicTacClockMutex.*;
+import com.ivanch.TicTacClock.TicTacClockMutexVer1.*;
 
 public class TicTacClockMain {
 	
@@ -28,9 +28,9 @@ public class TicTacClockMain {
 		} catch (IOException e) { }
 		
 		//create synchronized threads
-		ThreadTic th1 = new ThreadTic(monitors, numberOfIterations, outputStream);
-		ThreadTac th2 = new ThreadTac(monitors, numberOfIterations, outputStream);
-		ThreadClock th3 = new ThreadClock(monitors, numberOfIterations, outputStream);
+		ThreadTicV1 th1 = new ThreadTicV1(monitors, numberOfIterations, outputStream);
+		ThreadTacV1 th2 = new ThreadTacV1(monitors, numberOfIterations, outputStream);
+		ThreadClockV1 th3 = new ThreadClockV1(monitors, numberOfIterations, outputStream);
 		
 		//run threads in turn with an intermediate timer to run sequentially
 		th1.start();
