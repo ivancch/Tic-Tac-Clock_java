@@ -10,7 +10,6 @@ public class ThreadClock implements Runnable{
 	private final int iterations;
 	private final FileOutputStream outputStream;
 	
-	
 	public ThreadClock(Object[] monitors, int numberOfIterations, FileOutputStream outputStream) {
 		this.monitors = monitors;
 		self = new Thread (this);
@@ -36,19 +35,35 @@ public class ThreadClock implements Runnable{
 	
 	@Override
 	public void run() {
-		for (int i = 0; i < iterations; i++) {
-			System.out.println("3\n");
+		int i = 0;
+		while (true) {
+
 			echoClock();
 			
+			synchronized (monitors[2]) {
+				monitors[2].notify();					
+			}				
+			
+			if (i == iterations - 1)
+				break; //loop exit condition
+			i++;
+			
+			try {
+				synchronized (monitors[1]) {
+					monitors[1].wait();
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 		}
 	}
 	
 	private void echoClock() {
 		try {
-			outputStream.write("clock\n".getBytes());
+			outputStream.write("clock!\n".getBytes());
 		} catch (IOException e) { e.printStackTrace(); }
 	}
-	
 	
 }
 

@@ -10,7 +10,6 @@ public class ThreadTac implements Runnable {
 	private final int iterations;
 	private final FileOutputStream outputStream;
 	
-	
 	public ThreadTac(Object[] monitors, int numberOfIterations, FileOutputStream outputStream) {
 		this.monitors = monitors;
 		self = new Thread (this);
@@ -36,16 +35,33 @@ public class ThreadTac implements Runnable {
 	
 	@Override
 	public void run() {
-		for (int i = 0; i < iterations; i++) {
-			System.out.println("2-");
+		int i = 0;
+		while (true) {
+
 			echoTac();
+			
+			synchronized (monitors[1]) {
+				monitors[1].notify();					
+			}			
+			
+			if (i == iterations - 1)
+				break; //loop exit condition
+			i++;
+			
+			try {
+				synchronized (monitors[0]) {
+					monitors[0].wait();
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			
 		}
 	}
 	
 	private void echoTac() {
 		try {
-			outputStream.write("tac-".getBytes());
+			outputStream.write("tac - ".getBytes());
 		} catch (IOException e) { e.printStackTrace(); }
 	}
 

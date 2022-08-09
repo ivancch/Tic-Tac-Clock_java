@@ -10,7 +10,6 @@ public class ThreadTic implements Runnable {
 	private final int iterations;
 	private final FileOutputStream outputStream;
 	
-	
 	public ThreadTic(Object[] monitors, int numberOfIterations, FileOutputStream outputStream) {
 		this.monitors = monitors;
 		self = new Thread (this);
@@ -36,15 +35,32 @@ public class ThreadTic implements Runnable {
 	
 	@Override
 	public void run() {
-		for (int i = 0; i < iterations; i++) {
-			System.out.println("1-");
+		int i = 0;
+		while (true) {
+			
 			echoTic();
+			
+			synchronized (monitors[0]) {
+				monitors[0].notify();					
+			}				
+			
+			if (i == iterations - 1)
+				break; //loop exit condition
+			i++;
+			
+			try {
+				synchronized (monitors[2]) {
+					monitors[2].wait();
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	private void echoTic() {
 		try {
-			outputStream.write("Tic-".getBytes());
+			outputStream.write("Tic - ".getBytes());
 		} catch (IOException e) { e.printStackTrace(); }
 	}
 
