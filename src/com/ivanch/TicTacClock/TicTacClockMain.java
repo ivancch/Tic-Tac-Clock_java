@@ -3,9 +3,12 @@ package com.ivanch.TicTacClock;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.ivanch.TicTacClock.TicTacClockMutexVer1.*;
+import com.ivanch.TicTacClock.TicTacClockMutexVer2.*;
 
 public class TicTacClockMain {
 	
@@ -13,15 +16,17 @@ public class TicTacClockMain {
 	public static void main(String[] args) throws InterruptedException {
 		
 		TicTacClockMutexVersionOne();
+		TicTacClockMutexVersionTwo();
 		
 	}
 	
+
 	public static void TicTacClockMutexVersionOne() throws InterruptedException {
 		Object[] monitors = new Object[3];
 		fillArrayMonitors(monitors);
-		int numberOfIterations = 11;
-		String FileNameForResult = "ResultMutexVer1.txt";
-		FileOutputStream outputStream = createOutputStream(FileNameForResult);
+		int numberOfIterations = 10;
+		String fileNameForResult = "ResultMutexVer1.txt";
+		FileOutputStream outputStream = createOutputStream(fileNameForResult);
 		
 		try {
 			outputStream.write("Start TicTacClockMutexVersionOne()\n".getBytes());
@@ -50,6 +55,33 @@ public class TicTacClockMain {
 		closeOutputStream(outputStream);
 	}
 	
+	private static void TicTacClockMutexVersionTwo() {
+		Object[] monitors = new Object[3];
+		fillArrayMonitors(monitors);
+		int numberOfIterations = 10;
+		String fileNameForResult = "ResultMutexVer2.txt";
+		FileOutputStream outputStream = createOutputStream(fileNameForResult);
+		
+		try {
+			outputStream.write("Start TicTacClockMutexVersionOne()\n".getBytes());
+		} catch (IOException e) { }
+		
+		List<Thread> workingThreads = new ArrayList<Thread>();
+		workingThreads.add(new ThreadTicV2(monitors[0], outputStream).getThread());
+		workingThreads.add(new ThreadTacV2(monitors[1], outputStream).getThread());
+		workingThreads.add(new ThreadClockV2(monitors[2], outputStream).getThread());
+		
+		ControlThread controlThread 
+			= new ControlThread(monitors, numberOfIterations, workingThreads);
+		controlThread.start();
+		controlThread.join();
+		
+		try {
+			outputStream.write("End TicTacClockMutexVersionOne()\n".getBytes());
+		} catch (IOException e) { }
+		
+	}
+	
 	public static FileOutputStream createOutputStream(String fileName)
 	{
 		try {
@@ -70,22 +102,5 @@ public class TicTacClockMain {
 		}
 	}
 	
+	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

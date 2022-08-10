@@ -66,19 +66,3 @@ public class ThreadTicV1 implements Runnable {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

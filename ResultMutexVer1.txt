@@ -9,5 +9,4 @@ Tic - tac - clock!
 Tic - tac - clock!
 Tic - tac - clock!
 Tic - tac - clock!
-Tic - tac - clock!
 End TicTacClockMutexVersionOne()

@@ -67,14 +67,3 @@ public class ThreadClockV1 implements Runnable{
 	
 }
 
-
-
-
-
-
-
-
-
-
-
-
