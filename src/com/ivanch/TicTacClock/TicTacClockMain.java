@@ -20,7 +20,6 @@ public class TicTacClockMain {
 		
 	}
 	
-
 	public static void TicTacClockMutexVersionOne() throws InterruptedException {
 		Object[] monitors = new Object[3];
 		fillArrayMonitors(monitors);
@@ -63,21 +62,23 @@ public class TicTacClockMain {
 		FileOutputStream outputStream = createOutputStream(fileNameForResult);
 		
 		try {
-			outputStream.write("Start TicTacClockMutexVersionOne()\n".getBytes());
+			outputStream.write("Start TicTacClockMutexVersionTwo()\n".getBytes());
 		} catch (IOException e) { }
 		
+		//creating and adding worker threads to List
 		List<Thread> workingThreads = new ArrayList<Thread>();
 		workingThreads.add(new ThreadTicV2(monitors[0], outputStream).getThread());
 		workingThreads.add(new ThreadTacV2(monitors[1], outputStream).getThread());
 		workingThreads.add(new ThreadClockV2(monitors[2], outputStream).getThread());
 		
+		//create a control flow to manage and synchronize worker threads
 		ControlThread controlThread 
 			= new ControlThread(monitors, numberOfIterations, workingThreads);
 		controlThread.start();
 		controlThread.join();
 		
 		try {
-			outputStream.write("End TicTacClockMutexVersionOne()\n".getBytes());
+			outputStream.write("End TicTacClockMutexVersionTwo()\n".getBytes());
 		} catch (IOException e) { }
 		
 	}

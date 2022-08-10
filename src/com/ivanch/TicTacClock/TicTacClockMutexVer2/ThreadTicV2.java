@@ -2,15 +2,16 @@ package com.ivanch.TicTacClock.TicTacClockMutexVer2;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class ThreadTicV2 implements Runnable {
 
-	private final Object monitor;
+	private final Object monitor0;
 	private final Thread self;
 	private final FileOutputStream outputStream;
 	
-	public ThreadTicV2(Object monitor, FileOutputStream outputStream) {
-		this.monitor = monitor;
+	public ThreadTicV2(Object monitor0, FileOutputStream outputStream) {
+		this.monitor0 = monitor0;
 		self = new Thread (this);
 		this.outputStream = outputStream;
 	}
@@ -34,6 +35,17 @@ public class ThreadTicV2 implements Runnable {
 	@Override
 	public void run() {
 		
+		while(!self.isInterrupted()) {
+			echoTic();
+			synchronized (monitor0) {
+				monitor0.notify();
+				try {
+					monitor0.wait();
+				} catch (InterruptedException e) { 
+					Thread.currentThread().interrupt();
+				}
+			}
+		}
 	}
 	
 	private void echoTic() {

@@ -1,2 +1,12 @@
-Start TicTacClockMutexVersionOne()
-End TicTacClockMutexVersionOne()
+Start TicTacClockMutexVersionTwo()
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+End TicTacClockMutexVersionTwo()
