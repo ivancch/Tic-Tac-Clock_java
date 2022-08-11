@@ -5,10 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import com.ivanch.TicTacClock.TicTacClockMutexVer1.*;
 import com.ivanch.TicTacClock.TicTacClockMutexVer2.*;
+import com.ivanch.TicTacClock.TicTacClockSemaphore.*;
 
 public class TicTacClockMain {
 	
@@ -17,10 +19,11 @@ public class TicTacClockMain {
 		
 		TicTacClockMutexVersionOne();
 		TicTacClockMutexVersionTwo();
+		TicTacClockSemaphore();
 		
 	}
-	
-	public static void TicTacClockMutexVersionOne() throws InterruptedException {
+
+	private static void TicTacClockMutexVersionOne() throws InterruptedException {
 		Object[] monitors = new Object[3];
 		fillArrayMonitors(monitors);
 		int numberOfIterations = 10;
@@ -83,7 +86,39 @@ public class TicTacClockMain {
 		
 	}
 	
-	public static FileOutputStream createOutputStream(String fileName)
+	
+	private static void TicTacClockSemaphore() throws InterruptedException {
+		Semaphore semaphore = new Semaphore(1);
+		ClockStatus status = ClockStatus.TIC;
+		int iterations = 10;
+		String fileNameForResult = "ResultSemaphore.txt";
+		FileOutputStream outputStream = createOutputStream(fileNameForResult);
+		
+		try {
+			outputStream.write("Start TicTacClockSemaphore()\n".getBytes());
+		} catch (IOException e) { }
+		
+		TicSemaphore th1 = new TicSemaphore(semaphore, status, 
+										    iterations, outputStream);
+		TacSemaphore th2 = new TacSemaphore(semaphore, status, 
+											iterations, outputStream);
+		ClockSemaphore th3 = new ClockSemaphore(semaphore, status, 
+												iterations, outputStream);
+		th1.start();
+		th2.start();
+		th3.start();
+		
+		th1.join();
+		th2.join();
+		th3.join();
+		
+		try {
+			outputStream.write("End TicTacClockSemaphore()\n".getBytes());
+		} catch (IOException e) { }
+		
+	}
+	
+	private static FileOutputStream createOutputStream(String fileName)
 	{
 		try {
 			return new FileOutputStream(fileName);
