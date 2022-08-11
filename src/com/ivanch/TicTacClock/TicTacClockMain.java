@@ -14,18 +14,50 @@ import com.ivanch.TicTacClock.TicTacClockSemaphore.*;
 
 public class TicTacClockMain {
 	
+	private final static int numberOfIterationsAllTreads = 10;
+	
 	public static void main(String[] args) throws InterruptedException {
 		
+		System.out.print("Start of main\n");
+		
+		
+		long time1 = System.currentTimeMillis();//for estimate execution time
 		TicTacClockMutexVersionOne();
+		time1 = System.currentTimeMillis() - time1;
+		
+		
+		long time2 = System.currentTimeMillis();		
 		TicTacClockMutexVersionTwo();
+		time2 = System.currentTimeMillis() - time2;
+		
+		
+		long time3 = System.currentTimeMillis();		
 		TicTacClockSemaphore();
+		time3 = System.currentTimeMillis() - time3;
+		
+		System.out.print(String.format("First synchronization method using "
+				+ "mutex for %d iterations ran %d milliseconds\n",
+				numberOfIterationsAllTreads,
+				time1));
+		
+		System.out.print(String.format("Second synchronization method using "
+				+ "mutex for %d iterations ran %d milliseconds\n",
+				numberOfIterationsAllTreads,
+				time2));
+		
+		System.out.print(String.format("Third synchronization method using "
+				+ "semaphore for %d iterations ran %d milliseconds\n",
+				numberOfIterationsAllTreads,
+				time3));
+		
+		System.out.println("End of main");
 		
 	}
 
 	private static void TicTacClockMutexVersionOne() throws InterruptedException {
 		Object[] monitors = new Object[3];
 		fillArrayMonitors(monitors);
-		int numberOfIterations = 10;
+		int numberOfIterations = numberOfIterationsAllTreads;
 		String fileNameForResult = "ResultMutexVer1.txt";
 		FileOutputStream outputStream = createOutputStream(fileNameForResult);
 		
@@ -59,7 +91,7 @@ public class TicTacClockMain {
 	private static void TicTacClockMutexVersionTwo() {
 		Object[] monitors = new Object[3];
 		fillArrayMonitors(monitors);
-		int numberOfIterations = 10;
+		int numberOfIterations = numberOfIterationsAllTreads;
 		String fileNameForResult = "ResultMutexVer2.txt";
 		FileOutputStream outputStream = createOutputStream(fileNameForResult);
 		
@@ -90,7 +122,7 @@ public class TicTacClockMain {
 	
 	private static void TicTacClockSemaphore() throws InterruptedException {
 		Semaphore semaphore = new Semaphore(1);
-		int iterations = 10;
+		int iterations = numberOfIterationsAllTreads;
 		String fileNameForResult = "ResultSemaphore.txt";
 		FileOutputStream outputStream = createOutputStream(fileNameForResult);
 		
