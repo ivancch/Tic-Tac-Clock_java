@@ -1,2 +1,12 @@
 Start TicTacClockSemaphore()
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
+Tic - tac - clock!
 End TicTacClockSemaphore()

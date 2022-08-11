@@ -4,21 +4,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
+import com.ivanch.TicTacClock.TicTacClockMain;
+
 public class ClockSemaphore implements Runnable{
 	
-	private ClockStatus status;
 	private final Semaphore semaphore;
 	private final Thread self;
 	private final FileOutputStream outputStream;
 	private final int iterations;
 	
 	public ClockSemaphore(Semaphore semaphore, 
-						  ClockStatus status, 
 						  int iterations, 
 						  FileOutputStream outputStream) {
 		self = new Thread(this);
 		this.semaphore = semaphore;
-		this.status = status;
 		this.iterations = iterations;
 		this.outputStream = outputStream; 
 	}
@@ -42,6 +41,20 @@ public class ClockSemaphore implements Runnable{
 	@Override
 	public void run() {
 		
+		for (int i = 0; i < iterations; i++) {
+			
+			while (TicTacClockMain.statusSem != ClockStatus.CLOCK)
+				semaphore.release();
+			
+			try {
+				semaphore.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			echoClock();//write in file
+			TicTacClockMain.statusSem = ClockStatus.TIC;
+			semaphore.release();
+		}
 	}
 	
 	private void echoClock() {

@@ -14,7 +14,6 @@ import com.ivanch.TicTacClock.TicTacClockSemaphore.*;
 
 public class TicTacClockMain {
 	
-
 	public static void main(String[] args) throws InterruptedException {
 		
 		TicTacClockMutexVersionOne();
@@ -86,10 +85,11 @@ public class TicTacClockMain {
 		
 	}
 	
+	//global variable to allocate hours when the semaphore is running
+	public static ClockStatus statusSem = ClockStatus.TIC;	
 	
 	private static void TicTacClockSemaphore() throws InterruptedException {
 		Semaphore semaphore = new Semaphore(1);
-		ClockStatus status = ClockStatus.TIC;
 		int iterations = 10;
 		String fileNameForResult = "ResultSemaphore.txt";
 		FileOutputStream outputStream = createOutputStream(fileNameForResult);
@@ -98,12 +98,9 @@ public class TicTacClockMain {
 			outputStream.write("Start TicTacClockSemaphore()\n".getBytes());
 		} catch (IOException e) { }
 		
-		TicSemaphore th1 = new TicSemaphore(semaphore, status, 
-										    iterations, outputStream);
-		TacSemaphore th2 = new TacSemaphore(semaphore, status, 
-											iterations, outputStream);
-		ClockSemaphore th3 = new ClockSemaphore(semaphore, status, 
-												iterations, outputStream);
+		TicSemaphore th1 = new TicSemaphore(semaphore, iterations, outputStream);
+		TacSemaphore th2 = new TacSemaphore(semaphore, iterations, outputStream);
+		ClockSemaphore th3 = new ClockSemaphore(semaphore, iterations, outputStream);
 		th1.start();
 		th2.start();
 		th3.start();
